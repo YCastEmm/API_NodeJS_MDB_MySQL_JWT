@@ -1,4 +1,6 @@
 import express from "express";
+import { dbConnect } from "./config/mongoDB.js";
+
 import "dotenv/config";
 import cors from "cors";
 
@@ -7,6 +9,8 @@ const app = express()
 
 app.use(cors())
 
+
+dbConnect()
 
 const PORT = process.env.PORT
 
