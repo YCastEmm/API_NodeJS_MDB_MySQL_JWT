@@ -29,4 +29,4 @@ const UserSchema = new mongoose.Schema(
 )
 
 // mongoose.model("User", UserSchema) crea un modelo llamado User basado en UserSchema, y lo asocia con la colección "users" en MongoDB (Mongo pluraliza automáticamente el nombre del modelo).
-const User = mongoose.model("User", UserSchema)
+export const User = mongoose.model("User", UserSchema)

@@ -1,19 +1,24 @@
 import express from "express";
-import { dbConnect } from "./config/mongoDB.js";
-
-import "dotenv/config";
 import cors from "cors";
-
-console.clear()
-const app = express()
-
-app.use(cors())
+import "dotenv/config";
 
 
-dbConnect()
+import { dbConnect } from "./config/mongoDB.js";
+import router from "./routes/index.js";
 
-const PORT = process.env.PORT
+const app = express();
 
-const server = app.listen(PORT, () => console.log(`El server está corriendo en el puerto ${PORT}`))
+app.use(cors());
+app.use(express.json()) // Permite manejar cuerpo de solicitudes en formato JSON
 
-server.on("error", (error) => console.error(`Error al levantar el servidor: ${error}`))
+
+
+app.use("/api", router);
+
+dbConnect();
+
+const PORT = process.env.PORT;
+
+const server = app.listen(PORT, () => console.log(`El server está corriendo en el puerto ${PORT}`));
+
+server.on("error", (error) => console.error(`Error al levantar el servidor: ${error}`));
