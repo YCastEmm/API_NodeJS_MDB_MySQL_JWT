@@ -10,7 +10,7 @@ import path from "path";
 
 const router = express.Router();
 
-console.clear();
+// console.clear();
 
 // Esta es una alternativa más simple para cargar las rutas en el index. No es automática pero es menos código
 // import { router as routerUsers } from './users.js'
