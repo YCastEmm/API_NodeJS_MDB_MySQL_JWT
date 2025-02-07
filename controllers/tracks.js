@@ -1,4 +1,6 @@
+import { matchedData } from "express-validator";
 import { models } from "../models/index.js";
+import { handleError } from "../utils/handleError.js";
 
 const { tracksModel } = models
 
@@ -9,8 +11,13 @@ const { tracksModel } = models
  * @param {*} res 
  */
 const getTracks = async (req, res) =>{
-    const data = await tracksModel.find({})
-    res.send(data)
+    try {
+        const data = await tracksModel.find({})
+        res.send(data)
+    } catch (error) {
+        const errorMessage = "Error en getTracks."
+        handleError.handleHTTPError(res, errorMessage, 503)
+    }
 }
 
 /**
@@ -19,7 +26,7 @@ const getTracks = async (req, res) =>{
  * @param {*} res 
  */
 const getTrack = (req, res) =>{
-
+ñ
 }
 
 /**
@@ -28,11 +35,15 @@ const getTrack = (req, res) =>{
  * @param {*} res 
  */
 const createTrack = async (req, res) =>{
-    const { body } = req
-    
-    const data = await tracksModel.create(body)
+    try {
 
-    res.send({data})
+        const body = matchedData(req)
+        const data = await tracksModelaa.create(body) // función de la librería express-validator en Node.js. Se usa para extraer solo los datos validados de la solicitud (req)
+        res.send({ data })
+    } catch (error) {
+        const errorMessage = "Error en createTrack."
+        handleError.handleHTTPError(res, errorMessage, 503)
+    }
 }
 
 /**
