@@ -5,11 +5,7 @@ import { handleError } from "../utils/handleError.js";
 const { tracksModel } = models
 
 
-/**
- * Obtener todos los tracks
- * @param {*} req 
- * @param {*} res 
- */
+// Listar los tracks
 const getTracks = async (req, res) =>{
     try {
         const data = await tracksModel.find({})
@@ -20,11 +16,7 @@ const getTracks = async (req, res) =>{
     }
 }
 
-/**
- * Obtener un track
- * @param {*} req 
- * @param {*} res 
- */
+// Obtener un track por su id
 const getTrack = async (req, res) =>{
     try {
         req = matchedData(req)
@@ -37,11 +29,7 @@ const getTrack = async (req, res) =>{
     }
 }
 
-/**
- * Crear un track
- * @param {*} req 
- * @param {*} res 
- */
+// Crear un track
 const createTrack = async (req, res) =>{
     try {
         const body = matchedData(req)
@@ -53,11 +41,8 @@ const createTrack = async (req, res) =>{
     }
 }
 
-/**
- * Modificar un track 
- * @param {*} req 
- * @param {*} res 
- */
+
+// Modificar un track
 const updateTrack = async (req, res) =>{
     try {
         const { id, ...body } = matchedData(req)
@@ -71,11 +56,7 @@ const updateTrack = async (req, res) =>{
     }
 }
 
-/**
- * Eliminar un track
- * @param {*} req 
- * @param {*} res 
- */
+// Eliminar un track
 const deleteTrack = async (req, res) =>{
     try {
         const { id } = matchedData(req)
@@ -85,7 +66,7 @@ const deleteTrack = async (req, res) =>{
             return res.status(404).json({ error: "El track que se quiere eliminar no existe." });
             
         }
-        const data = await tracksModel.deleteOne({_id: id})
+        const data = await tracksModel.delete({ _id: id }); // Método traido de mongoose-delete para eliminación lógica: marca el documento como eliminado sin borrarlo físicamente
         res.json({message: "Track eliminado correctamente", deletedTrack: data})
     } catch (error) {
         const errorMessage = "Error en deleteTrack."

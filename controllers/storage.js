@@ -1,69 +1,92 @@
 import { models } from "../models/index.js";
-const { storageModel } = models
-const PUBLIC_URL = process.env.PUBLIC_URL
+import { matchedData } from "express-validator";
+import { handleError } from "../utils/handleError.js";
+import fs from "fs";
+import { fileURLToPath } from "url";
+const { storageModel } = models;
 
-/**
- * Obtener todos los storages
- * @param {*} req 
- * @param {*} res 
- */
-const getStorages = async (req, res) =>{
-    const data = await storageModel.find({})
-    res.send(data)
-}
+const PUBLIC_URL = process.env.PUBLIC_URL;
+const MEDIA_PATH = fileURLToPath(new URL("../storage", import.meta.url)); //Obteno la ruta del archivo actual con formato URL, lo redirijo a ../storage y luego la paso a formato Path
 
-/**
- * Obtener un storage
- * @param {*} req 
- * @param {*} res 
- */
-const getStorage = (req, res) =>{
-
-}
-
-/**
- * Crear un storage
- * @param {*} req 
- * @param {*} res 
- */
-const createStorage = async (req, res) => {
-    const { body, file } = req;
-
-    const fileData = {
-        filename: file.filename,
-        url: `${PUBLIC_URL}/${file.filename}`
+// Listar los archivos
+const getStorages = async (req, res) => {
+    try {
+        const data = await storageModel.find({});
+        res.send(data);
+    } catch (error) {
+        const errorMessage = "Error en getStorages.";
+        handleError.handleHTTPError(res, errorMessage, 503);
     }
+};
 
-    const data = await storageModel.create(fileData);
-    
-    // Enviar todo el objeto req (no recomendado para producción)
-    res.send({data});
-}
+// Obtener un archivo por su id
+const getStorage = async (req, res) => {
+    try {
+        const { id } = matchedData(req);
+        const data = await storageModel.findById(id);
+        res.send(data);
+    } catch (error) {
+        const errorMessage = "Error en getStorages.";
+        handleError.handleHTTPError(res, errorMessage, 503);
+    }
+};
 
-/**
- * Modificar un storage 
- * @param {*} req 
- * @param {*} res 
- */
-const updateStorage = (req, res) =>{
+// Subir un archivo
+const createStorage = async (req, res) => {
+    try {
+        const { body, file } = req;
 
-}
+        const fileData = {
+            filename: file.filename,
+            url: `${PUBLIC_URL}/${file.filename}`,
+        };
 
-/**
- * Eliminar un storage
- * @param {*} req 
- * @param {*} res 
- */
-const deleteStorage = (req, res) =>{
+        const data = await storageModel.create(fileData);
 
-}
+        // Enviar todo el objeto req (no recomendado para producción)
+        res.send({ data });
+    } catch (error) {
+        const errorMessage = "Error en createStorage.";
+        handleError.handleHTTPError(res, errorMessage, 503);
+    }
+};
 
+// Borrar un archivo
+const deleteStorage = async (req, res) => {
+    try {
+        const { id } = matchedData(req);
 
+        // Busco el archivo en la base de datos para ver si existe y obtener el nombre del archivo
+        const data = await storageModel.findById(id);
+        if (!data) {
+            return res.status(404).send({ error: "Archivo no encontrado" });
+        }
+
+        const { filename } = data;
+
+        // Elimino el archivo de la base de datos
+        await storageModel.deleteOne({ _id: id });
+
+        // Construyo la ruta del archivo en el sistema de archivos
+        const filePath = `${MEDIA_PATH}/${filename}`;
+
+        // Verifico si el archivo existe antes de eliminarlo
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        } else {
+            return res.status(404).send({ error: "Archivo no encontrado en el sistema de archivos" });
+        }
+
+        res.send({ message: `El archivo fue elimnado correctamente`, file: filename });
+    } catch (error) {
+        const errorMessage = "Error en deleteStorage.";
+        handleError.handleHTTPError(res, errorMessage, 503);
+    }
+};
 
 export const StorageController = {
-                                    getStorage,
-                                    getStorage,
-                                    createStorage,
-                                    updateStorage,
-                                    deleteStorage
-                                }
+    getStorages,
+    getStorage,
+    createStorage,
+    deleteStorage,
+};

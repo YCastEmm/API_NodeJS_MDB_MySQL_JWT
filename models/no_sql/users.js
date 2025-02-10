@@ -1,5 +1,6 @@
 
 import mongoose from "mongoose";
+import mongooseDelete from "mongoose-delete"; 
 
 
 const UserSchema = new mongoose.Schema(
@@ -27,6 +28,8 @@ const UserSchema = new mongoose.Schema(
         versionKey: false
     }
 )
+
+UserSchema.plugin(mongooseDelete, {overrideMethods: "all"})
 
 // mongoose.model("User", UserSchema) crea un modelo llamado User basado en UserSchema, y lo asocia con la colección "users" en MongoDB (Mongo pluraliza automáticamente el nombre del modelo).
 export const User = mongoose.model("User", UserSchema)

@@ -1,21 +1,21 @@
-
 import mongoose from "mongoose";
+import mongooseDelete from "mongoose-delete"; 
 
 const StorageSchema = new mongoose.Schema(
     {
-        url:{
+        url: {
             type: String
         },
-        filename:{
+        filename: {
             type: String
         }
     },
     {
-        timestamps: true,
-        versionKey: false
+        timestamps: true, // Agrega createdAt y updatedAt automáticamente
+        versionKey: false // Desactiva el campo __v de versiones en MongoDB
     }
-)
+);
 
+StorageSchema.plugin(mongooseDelete, { overrideMethods: "all" }); // Agrega eliminación lógica al esquema
 
-// mongoose.model("Storage", StorageSchema) crea un modelo llamado Storage basado en StorageSchema, y lo asocia con la colección "storages" en MongoDB (Mongo pluraliza automáticamente el nombre del modelo).
-export const Storage = mongoose.model("Storage", StorageSchema)
+export const Storage = mongoose.model("Storage", StorageSchema); // Crea el modelo asociado a la colección "storages"
