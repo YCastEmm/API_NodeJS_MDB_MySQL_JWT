@@ -19,8 +19,8 @@ const getTracks = async (req, res) =>{
 // Obtener un track por su id
 const getTrack = async (req, res) =>{
     try {
-        req = matchedData(req)
-        const { id } = req
+        const validData = matchedData(req)
+        const { id } = validData
         const data = await tracksModel.findById(id)
         res.send({data})
     } catch (error) {
@@ -32,8 +32,8 @@ const getTrack = async (req, res) =>{
 // Crear un track
 const createTrack = async (req, res) =>{
     try {
-        const body = matchedData(req)
-        const data = await tracksModel.create(body) // función de la librería express-validator en Node.js. Se usa para extraer solo los datos validados de la solicitud (req)
+        const validData = matchedData(req)
+        const data = await tracksModel.create(validData) // función de la librería express-validator en Node.js. Se usa para extraer solo los datos validados de la solicitud (req)
         res.send({ data })
     } catch (error) {
         const errorMessage = "Error en createTrack."

@@ -16,7 +16,8 @@ const UserSchema = new mongoose.Schema(
             unique: true
         },
         password:{
-            type: String
+            type: String, 
+            select: false // Evita que el password se incluya por defecto en las consultas de la base de datos. 
         },
         role:{
             type: ["user", "admin"], // Esto le asigna un tipo de dato enum, que en este caso admite valores "user" o "admin"
