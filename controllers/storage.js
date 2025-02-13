@@ -1,6 +1,6 @@
 import { models } from "../models/index.js";
 import { matchedData } from "express-validator";
-import { handleError } from "../utils/handleError.js";
+import { handleHTTPError } from "../utils/handleError.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
 const { storageModel } = models;
@@ -15,7 +15,7 @@ const getStorages = async (req, res) => {
         res.send(data);
     } catch (error) {
         const errorMessage = "Error en getStorages.";
-        handleError.handleHTTPError(res, errorMessage, 503);
+        handleHTTPError(res, errorMessage, 503);
     }
 };
 
@@ -27,7 +27,7 @@ const getStorage = async (req, res) => {
         res.send(data);
     } catch (error) {
         const errorMessage = "Error en getStorages.";
-        handleError.handleHTTPError(res, errorMessage, 503);
+        handleHTTPError(res, errorMessage, 503);
     }
 };
 
@@ -47,7 +47,7 @@ const createStorage = async (req, res) => {
         res.send({ data });
     } catch (error) {
         const errorMessage = "Error en createStorage.";
-        handleError.handleHTTPError(res, errorMessage, 503);
+        handleHTTPError(res, errorMessage, 503);
     }
 };
 
@@ -80,7 +80,7 @@ const deleteStorage = async (req, res) => {
         res.send({ message: `El archivo fue elimnado correctamente`, file: filename });
     } catch (error) {
         const errorMessage = "Error en deleteStorage.";
-        handleError.handleHTTPError(res, errorMessage, 503);
+        handleHTTPError(res, errorMessage, 503);
     }
 };
 

@@ -1,6 +1,6 @@
 import { matchedData } from "express-validator";
 import { models } from "../models/index.js";
-import { handleError } from "../utils/handleError.js";
+import { handleHTTPError } from "../utils/handleError.js";
 
 const { tracksModel } = models
 
@@ -12,7 +12,7 @@ const getTracks = async (req, res) =>{
         res.send(data)
     } catch (error) {
         const errorMessage = "Error en getTracks."
-        handleError.handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(res, errorMessage, 503)
     }
 }
 
@@ -25,7 +25,7 @@ const getTrack = async (req, res) =>{
         res.send({data})
     } catch (error) {
         const errorMessage = "Error en getTrack."
-        handleError.handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(res, errorMessage, 503)
     }
 }
 
@@ -37,7 +37,7 @@ const createTrack = async (req, res) =>{
         res.send({ data })
     } catch (error) {
         const errorMessage = "Error en createTrack."
-        handleError.handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(res, errorMessage, 503)
     }
 }
 
@@ -52,7 +52,7 @@ const updateTrack = async (req, res) =>{
         res.send({ data })
     } catch (error) {
         const errorMessage = "Error en updateTrack."
-        handleError.handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(res, errorMessage, 503)
     }
 }
 
@@ -70,7 +70,7 @@ const deleteTrack = async (req, res) =>{
         res.json({message: "Track eliminado correctamente", deletedTrack: data})
     } catch (error) {
         const errorMessage = "Error en deleteTrack."
-        handleError.handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(res, errorMessage, 503)
     }
 }
 
