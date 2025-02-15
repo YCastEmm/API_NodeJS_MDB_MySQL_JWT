@@ -8,8 +8,9 @@ const { tracksModel } = models
 // Listar los tracks
 const getTracks = async (req, res) =>{
     try {
+        const user = req.user
         const data = await tracksModel.find({})
-        res.send(data)
+        res.send({user, data})
     } catch (error) {
         const errorMessage = "Error en getTracks."
         handleHTTPError(res, errorMessage, 503)
