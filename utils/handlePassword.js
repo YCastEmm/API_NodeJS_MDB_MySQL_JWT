@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs'
 
 
 /**
- * Encripta una contraseña de texto plano
+ * Encripta una contraseña de texto plano.
  * 
  * @param {string} plainPassword - Contraseña sin encriptar
  */

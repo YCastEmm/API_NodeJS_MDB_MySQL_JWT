@@ -4,7 +4,6 @@ import { validatorCreateItem, validatorGetItem } from "../validators/tracks.js";
 import { authMiddleware } from "../middlewares/session.js";
 import { checkRole } from "../middlewares/roles.js";
 
-
 export const router = express.Router()
 
 // Ruta para listar los tracks
@@ -14,7 +13,7 @@ router.get("/", authMiddleware, TrackController.getTracks)
 router.get("/:id",authMiddleware, validatorGetItem, TrackController.getTrack)
 
 // Ruta para crear un track
-router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateItem, TrackController.createTrack)
+router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateItem, TrackController.createTrack, )
 
 // Ruta para actualizar un track 
 router.put("/:id", authMiddleware, validatorGetItem, validatorCreateItem, TrackController.updateTrack)

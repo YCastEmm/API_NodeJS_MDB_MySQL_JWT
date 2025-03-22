@@ -1,18 +1,21 @@
 import { models } from "../models/index.js";
 import { matchedData } from "express-validator";
 import { handleHTTPError } from "../utils/handleError.js";
+import { handleResponse } from "../utils/handleResponse.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
 const { storageModel } = models;
 
 const PUBLIC_URL = process.env.PUBLIC_URL;
-const MEDIA_PATH = fileURLToPath(new URL("../storage", import.meta.url)); //Obteno la ruta del archivo actual con formato URL, lo redirijo a ../storage y luego la paso a formato Path
+const MEDIA_PATH = fileURLToPath(new URL("../storage", import.meta.url)); //Obtengo la ruta del archivo actual con formato URL, lo redirijo a ../storage y luego la paso a formato Path
 
 // Listar los archivos
 const getStorages = async (req, res) => {
     try {
         const data = await storageModel.find({});
-        res.send(data);
+        
+        handleResponse(res, 200, "Se listaron todos los archivos del storage", data)
+
     } catch (error) {
         const errorMessage = "Error en getStorages.";
         handleHTTPError(res, errorMessage, 503);
@@ -24,9 +27,14 @@ const getStorage = async (req, res) => {
     try {
         const { id } = matchedData(req);
         const data = await storageModel.findById(id);
-        res.send(data);
+        
+        if (!data) {
+            return handleHTTPError(res, "Archivo no encontrado", 404);
+        }
+
+        handleResponse(res, 200, "Se obtuvo correctamente el archivo por el ID ingresado", data)
     } catch (error) {
-        const errorMessage = "Error en getStorages.";
+        const errorMessage = "Error en getStorage.";
         handleHTTPError(res, errorMessage, 503);
     }
 };
@@ -44,45 +52,32 @@ const createStorage = async (req, res) => {
         const data = await storageModel.create(fileData);
 
         // Enviar todo el objeto req (no recomendado para producción)
-        res.send({ data });
+        handleResponse(res, 200, "Se subió correctamente el archivo", data)
+
     } catch (error) {
         const errorMessage = "Error en createStorage.";
         handleHTTPError(res, errorMessage, 503);
     }
 };
 
-// Borrar un archivo
+// Realizar un borrado lógico del archivo
 const deleteStorage = async (req, res) => {
     try {
         const { id } = matchedData(req);
 
-        // Busco el archivo en la base de datos para ver si existe y obtener el nombre del archivo
         const data = await storageModel.findById(id);
         if (!data) {
-            return res.status(404).send({ error: "Archivo no encontrado" });
+            return handleHTTPError(res, "Archivo no encontrado", 404);
         }
 
-        const { filename } = data;
+        await data.delete();
 
-        // Elimino el archivo de la base de datos
-        await storageModel.deleteOne({ _id: id });
-
-        // Construyo la ruta del archivo en el sistema de archivos
-        const filePath = `${MEDIA_PATH}/${filename}`;
-
-        // Verifico si el archivo existe antes de eliminarlo
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        } else {
-            return res.status(404).send({ error: "Archivo no encontrado en el sistema de archivos" });
-        }
-
-        res.send({ message: `El archivo fue elimnado correctamente`, file: filename });
+        handleResponse(res, 200, "Se marcó el archivo como eliminado", { file: data.filename });
     } catch (error) {
-        const errorMessage = "Error en deleteStorage.";
-        handleHTTPError(res, errorMessage, 503);
+        handleHTTPError(res, "Error en deleteStorage", 503);
     }
 };
+
 
 export const StorageController = {
     getStorages,

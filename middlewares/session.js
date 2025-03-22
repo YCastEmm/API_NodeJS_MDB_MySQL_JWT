@@ -8,16 +8,14 @@ export const authMiddleware = async (req, res, next) =>{
     try {
         
         if (!req.headers.authorization) {
-            handleHTTPError(res, "No hay un token en el header", 401)
-            return
+            return handleHTTPError(res, "No se encontró un token en el encabezado de autorización", 401)
         }
 
         const token = req.headers.authorization.split(" ").pop()
-        const dataToken = await verifyToken(token)
+        const dataToken = verifyToken(token)
 
-        if (!dataToken._id) {
-            handleHTTPError(res, "No hay un _id en el token", 401)
-            return
+        if (!dataToken || !dataToken._id) {
+            return handleHTTPError(res, "El token proporcionado no contiene un identificador válido", 401)
         }
 
         const user = await User.findById(dataToken._id)
@@ -26,6 +24,6 @@ export const authMiddleware = async (req, res, next) =>{
         next()
 
     } catch (error) {
-        handleHTTPError(res, "Error en authMiddleware", 401)
+        handleHTTPError(res, "Error al validar la autenticación", 401)
     }
 }

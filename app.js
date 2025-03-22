@@ -10,8 +10,8 @@ const app = express();
 
 
 app.use(cors());
-app.use(express.json()) // Permite manejar cuerpo de solicitudes en formato JSON
-app.use(express.static("storage")) // le indica a Express que sirva archivos estáticos desde el directorio storage.
+app.use(express.json()) 
+app.use(express.static("storage")) // le indico a Express que sirva archivos estáticos desde el directorio storage
 
 
 app.use("/api", router);

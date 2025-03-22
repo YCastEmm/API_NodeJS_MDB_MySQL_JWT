@@ -5,11 +5,8 @@ import mongooseDelete from "mongoose-delete";
 
 const UserSchema = new mongoose.Schema(
     {
-        name:{
+        username:{
             type: String
-        },
-        age:{
-            type: Number
         },
         email:{
             type: String,
@@ -17,10 +14,10 @@ const UserSchema = new mongoose.Schema(
         },
         password:{
             type: String, 
-            select: false // Evita que el password se incluya por defecto en las consultas de la base de datos. 
+            select: false // Evito que el password se incluya por defecto en las consultas de la base de datos. 
         },
         role:{
-            type: ["user", "admin"], // Esto le asigna un tipo de dato enum, que en este caso admite valores "user" o "admin"
+            type: ["user", "admin"],
             default: "user"
         }
     },

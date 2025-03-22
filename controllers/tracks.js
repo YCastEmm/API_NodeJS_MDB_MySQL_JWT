@@ -1,6 +1,8 @@
 import { matchedData } from "express-validator";
 import { models } from "../models/index.js";
 import { handleHTTPError } from "../utils/handleError.js";
+import { handleResponse } from "../utils/handleResponse.js";
+import { createLog } from "../middlewares/logs.js";
 
 const { tracksModel } = models
 
@@ -8,9 +10,8 @@ const { tracksModel } = models
 // Listar los tracks
 const getTracks = async (req, res) =>{
     try {
-        const user = req.user
         const data = await tracksModel.find({})
-        res.send({user, data})
+        handleResponse(res, 200, "Se listaron todos los tracks.", data)
     } catch (error) {
         const errorMessage = "Error en getTracks."
         handleHTTPError(res, errorMessage, 503)
@@ -23,10 +24,10 @@ const getTrack = async (req, res) =>{
         const validData = matchedData(req)
         const { id } = validData
         const data = await tracksModel.findById(id)
-        res.send({data})
+        handleResponse(res, 200, "Se obtuvo el track por ID ingresado.", data)
     } catch (error) {
         const errorMessage = "Error en getTrack."
-        handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(req, res, errorMessage, 503)
     }
 }
 
@@ -35,10 +36,10 @@ const createTrack = async (req, res) =>{
     try {
         const validData = matchedData(req)
         const data = await tracksModel.create(validData) // función de la librería express-validator en Node.js. Se usa para extraer solo los datos validados de la solicitud (req)
-        res.send({ data })
+        handleResponse(res, 200, "Se creó correctamente el nuevo track.", data)
     } catch (error) {
         const errorMessage = "Error en createTrack."
-        handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(req, res, errorMessage, 503)
     }
 }
 
@@ -46,14 +47,18 @@ const createTrack = async (req, res) =>{
 // Modificar un track
 const updateTrack = async (req, res) =>{
     try {
-        const { id, ...body } = matchedData(req)
-        const data = await tracksModel.findByIdAndUpdate(
-            id, body
-        ) 
-        res.send({ data })
+        const { id, ...body } = matchedData(req);
+        const existingTrack = await tracksModel.findById(id);
+
+        if (!existingTrack) {
+            return res.status(404).send("No se encontró el documento");
+        }
+        const updatedTrack = await tracksModel.findByIdAndUpdate(id, body, { returnDocument: "after" }) 
+        
+        handleResponse(res, 200, "Se actualizó correctamente el documento", { before: existingTrack, after: updatedTrack })
     } catch (error) {
         const errorMessage = "Error en updateTrack."
-        handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(req, res, errorMessage, 503)
     }
 }
 
@@ -68,10 +73,10 @@ const deleteTrack = async (req, res) =>{
             
         }
         const data = await tracksModel.delete({ _id: id }); // Método traido de mongoose-delete para eliminación lógica: marca el documento como eliminado sin borrarlo físicamente
-        res.json({message: "Track eliminado correctamente", deletedTrack: data})
+        handleResponse(res, 200, "Se eliminó correctamente el track.", data)
     } catch (error) {
         const errorMessage = "Error en deleteTrack."
-        handleHTTPError(res, errorMessage, 503)
+        handleHTTPError(req, res, errorMessage, 503)
     }
 }
 
