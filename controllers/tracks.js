@@ -2,10 +2,9 @@ import { matchedData } from "express-validator";
 import { models } from "../models/index.js";
 import { handleHTTPError } from "../utils/handleError.js";
 import { handleResponse } from "../utils/handleResponse.js";
-import { createLog } from "../middlewares/logs.js";
+
 
 const { tracksModel } = models
-
 
 // Listar los tracks
 const getTracks = async (req, res) =>{

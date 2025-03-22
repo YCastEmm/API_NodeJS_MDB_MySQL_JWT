@@ -10,27 +10,6 @@ import path from "path";
 
 const router = express.Router();
 
-// console.clear();
-
-// Esta es una alternativa más simple para cargar las rutas en el index. No es automática pero es menos código
-// import { router as routerUsers } from './users.js'
-// import { router as routerTracks } from './tracks.js'
-// import { router as routerStorage } from './storage.js'
-
-
-// try {
-//     router.use("/users", routerUsers)
-//     router.use("/track", routerTracks)
-//     router.use("/storage", routerStorage)
-//     console.log("Se cargaron las rutas");
-
-// } catch (error) {
-//     console.log("error al cargar las rutas");
-    
-// }
-
-
-
 
 // Obtiene la ruta del directorio actual a partir de import.meta.url
 const PATH_ROUTES = path.dirname(fileURLToPath(import.meta.url));
@@ -54,7 +33,6 @@ const loadRoutes = async () => {
             
             if (module.router) {
                 router.use(`/${name}`, module.router); // Agrega la ruta al router
-                // console.log(`Ruta agregada: /${name}`); 
 
             } else {
                 console.warn(`⚠️ No se encontró "router" en ${file}`);

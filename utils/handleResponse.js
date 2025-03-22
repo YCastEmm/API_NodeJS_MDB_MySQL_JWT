@@ -1,3 +1,4 @@
+import { logger } from "./logger.js"
 
 /**
  * Manejador de respuestas
@@ -7,5 +8,6 @@
  * @param {Object} data 
  */
 export const handleResponse = (res, statusCode, message, data) =>{
+    logger.info({message, data})    
     res.status(statusCode).json({message, data})
 }

@@ -16,7 +16,7 @@ const registerController = async (req, res) => {
         const body = { ...validData, password: passwordHash }; 
         
         const createdUser = await usersModel.create(body); 
-        console.log(typeof(createdUser))
+
         const plainUser = createdUser.toObject(); // Convierto el documento de Mongoose en un objeto plano
         
         const authPayload = {
