@@ -1,8 +1,7 @@
 # 🎧 Backend de gestión multimedia con Node.js + MongoDB
 
 Este proyecto es un backend desarrollado con Node.js y Express que permite gestionar usuarios, archivos multimedia y roles de acceso de forma segura y modular.  
-Incluye autenticación con JWT, subida de archivos con Multer, validaciones con express-validator y control de acceso por roles.  
-
+Incluye autenticación con JWT, subida de archivos con Multer, validaciones con express-validator, control de acceso por roles y un sistema de logs centralizado con Winston.
 
 <br>
 
@@ -11,7 +10,7 @@ Incluye autenticación con JWT, subida de archivos con Multer, validaciones con 
 - ✅ Registro y login de usuarios con JWT
 - ✅ Encriptación segura de contraseñas (bcrypt)
 - ✅ Subida de archivos con Multer
-- ✅ Acceso a archivos por ID
+- ✅ Logger con Winston
 - ✅ Borrado lógico (soft delete)
 - ✅ Middleware de autenticación y control de roles
 - ✅ Validaciones con `express-validator`
@@ -29,6 +28,7 @@ Incluye autenticación con JWT, subida de archivos con Multer, validaciones con 
 - **bcrypt** para encriptar contraseñas
 - **express-validator** para validaciones
 - **mongoose-delete** para borrado lógico
+- **winston** para logging
 
 <br>
 
@@ -36,6 +36,7 @@ Incluye autenticación con JWT, subida de archivos con Multer, validaciones con 
 📦 src <br>
 ┣ 📁config <br>
 ┣ 📁controllers <br>
+┣ 📁logs <br>
 ┣ 📁middlewares <br>
 ┣ 📁models <br>
 ┣ 📁routes <br>
